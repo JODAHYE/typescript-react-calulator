@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 const Wrap = styled.div`
-    background: #87AAD8;
+    background: #54B2D3;
     display: inline-block;
     margin: 0 auto;
     width: 500px;
@@ -39,8 +39,9 @@ const Button = styled.button`
     box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.5);
     border-radius: 2px;
     background: #fff;
+    transition: .4s;
     &:active{
-        box-shadow: none;
+        box-shadow: 0 0 3px 3px rgba(255, 255, 255, 1);
     }
     @media (min-width: 320px) and (max-width: 480px) {
         height: 55px;
@@ -50,6 +51,18 @@ const Calculator: React.FC = () => {
     const [print, setPrint] = useState<string>('');
     const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) : void => {
             const eventTarget = e.target as HTMLElement;
+            if(eventTarget.innerHTML===')'){
+                let open=0;
+                let close=1;
+                for(let i=0; i<print.length; i++){
+                    if(print[i]==='(') open++;
+                    if(print[i]===')') close++;
+                }
+                if(open!==close){
+                    alert('잘못된 입력입니다.');
+                    return;    
+                }
+            }
             setPrint(prev=>prev+eventTarget.innerHTML);
     }
 
