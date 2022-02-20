@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 const Wrap = styled.div`
     background: #6922DE;
@@ -9,14 +10,13 @@ const Wrap = styled.div`
     border-radius: 30px;
     box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.5);
 `;
-const Input = styled.input`
+const Input = styled.p`
+    margin: 0 auto;
     width: 80%;
     font-size: 20px;
     padding: 10px;
-    outline: none;
     background: rgba(255, 255, 255, 0.4);
     margin-bottom: 16px;
-    border: none;
 `;
 
 const Row = styled.div`
@@ -40,35 +40,154 @@ const Button = styled.button`
     }
 `;
 const Calculator: React.FC = () => {
-    const [value,  setValue] = useState<string>('');
-    
-    useEffect(()=>{
-        console.log(value);
-    },[value]);
-
+    const [print, setPrint] = useState<string>('');
     const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) : void => {
-        if(e.target instanceof HTMLButtonElement){
-            setValue(value+e.target.innerHTML);
+            const eventTarget = e.target as HTMLElement;
+            setPrint(prev=>prev+eventTarget.innerHTML);
+    }
+
+    const onRemove = (): void => {
+        setPrint(prev=>prev.slice(0, -1));
+    }
+
+    const onResult = (): void => {
+        const result = toPostfix(print);
+        console.log('후위표기법: ', result?.join(' '));
+        if(result){
+            setPrint(String(calculate(result)));
+        };
+    }
+
+    const convert = (str:string):string[] => {
+        let result:Array<string> = [];
+        let temp = '';
+        for(let i=0; i<str.length; i++){
+            while(str[i] && (!isNaN(parseFloat(str[i])) || str[i]==='.')){  //숫자거나 . 이면
+                temp+=str[i];
+                i++;
+            }
+            if(temp) result.push(temp); 
+            if(str[i] && isNaN(parseFloat(str[i]))){ // 연산자이면
+                result.push(str[i]);
+                temp='';
+            }
+        }
+        return result;
+    } 
+
+    const toPostfix = (infix:string) :string[] | undefined => {
+        try{
+            const infixArr = convert(infix);  //인자를 배열로 변경
+            let stack = [];
+            let result = [];
+            const priority = (char:string) : number => {
+                switch(char){
+                    case '(':
+                    case ')':
+                        return 0;
+                    case '+':  
+                    case '-':
+                        return 1;
+                    case '*':
+                    case '/':
+                        return 2;
+                    default: 
+                        return -1;
+                }
+            }
+            for(let i=0; i<infixArr.length; i++){
+                if(!isNaN(parseFloat(infixArr[i]))){
+                    result.push(infixArr[i]);  
+                }else{
+                    switch(infixArr[i]){
+                        case '+': case '-': case '*': case '/':  
+                            if(stack.length>0){
+                                while(stack[stack.length-1]!=null && priority(infixArr[i]) <= priority(stack[stack.length-1])){
+                                    result.push(stack.pop());
+                                }    
+                                if(priority(infixArr[i]) > priority(stack[stack.length-1])){
+                                    stack.push(infixArr[i]);
+                                }
+                            }else{
+                                stack.push(infixArr[i]);
+                            } 
+                            break;
+                        case '(':
+                            stack.push(infixArr[i]);
+                            break;
+                        case ')':
+                            let c = stack.pop();
+                            while(c!='('){
+                                result.push(c);
+                                c = stack.pop();
+                            }    
+                            break;
+                        default:
+                            break;
+                    }
+                } 
+            }
+            while(stack.length>0){
+                result.push(stack.pop());
+            }   
+            return result as string[];    
+        }catch(e){
+            console.log(e);
+            alert(`${e}!! 정확한 식을 입력해주세요`);
+            window.location.replace("/");
+            return;
         }
     }
 
-    const onRemove = () => {
-        setValue(prev=>prev.slice(0, -1));
-    }
-
-    const onResult = () => {
-        setValue('');
+    const calculate = (postfix: string[]) : number => {
+        try{
+            if(postfix && postfix.length>0){
+                let stack:string[] = [];
+                for(let i=0; i<postfix.length; i++){
+                    if(!isNaN(parseFloat(postfix[i]))){ //숫자이면 넣음
+                        stack.push(postfix[i]);
+                    }else{
+                        let b = parseFloat(stack.pop() as string);
+                        let a = parseFloat(stack.pop() as string);
+                        let value = 0;
+                        switch(postfix[i]){
+                            case '+':
+                                value = a + b;
+                                break;
+                            case '-':
+                                value = a - b;
+                                break;
+                            case '*':
+                                value = a * b;
+                                break;
+                            case '/':
+                                value = a / b;
+                                break;
+                            default:
+                                break;
+                        }
+                        stack.push(String(value));
+                    }
+                }
+                return parseFloat(stack[0]);    
+            }else{
+                return 0;
+            }    
+        }catch(e){
+            alert(`${e}!! 정확한 식을 입력해주세요 calculate`);
+            window.location.replace("/");
+            return 0;
+        }
     }
 
     return (
         <Wrap>
-            <Input type="text" value={value} />
+            <Input>{print}</Input>
             <Row>
                 <Button onClick={onClick}>(</Button>
                 <Button onClick={onClick}>)</Button>
                 <Button onClick={onClick}>/</Button>
                 <Button onClick={onResult}>=</Button>
-
             </Row>
             <Row>
                 <Button onClick={onClick}>7</Button>
