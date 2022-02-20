@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useContext, useState } from 'react';
+import styled, { ThemeContext } from 'styled-components';
+type backColor = {
+    color?: string
+}
 const Wrap = styled.div`
-    background: #54B2D3;
+    background: #7B69F6;
     display: inline-block;
     margin: 0 auto;
     width: 500px;
@@ -29,7 +32,7 @@ const Row = styled.div`
     display: flex;
     justify-content: space-between;
 `;
-const Button = styled.button`
+const Button = styled.button<backColor>`
     width: calc(100%/2);
     font-size: 24px;
     height: 80px;
@@ -38,10 +41,10 @@ const Button = styled.button`
     margin: 2px;
     box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.5);
     border-radius: 2px;
-    background: #fff;
-    transition: .4s;
-    &:active{
-        box-shadow: 0 0 3px 3px rgba(255, 255, 255, 1);
+    background: ${props=>props.color?props.color:'#fff'};
+    transition: .2s;
+    &:active, &:hover{
+        box-shadow: 0 0 3px 3px ${props=>props.color?props.color:'#fff'};
     }
     @media (min-width: 320px) and (max-width: 480px) {
         height: 55px;
@@ -49,6 +52,7 @@ const Button = styled.button`
 `;
 const Calculator: React.FC = () => {
     const [print, setPrint] = useState<string>('');
+    const themeContext = useContext(ThemeContext);
     const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) : void => {
             const eventTarget = e.target as HTMLElement;
             if(eventTarget.innerHTML===')'){
@@ -194,7 +198,7 @@ const Calculator: React.FC = () => {
                 return 0;
             }    
         }catch(e){
-            alert(`${e}!! 정확한 식을 입력해주세요 calculate`);
+            alert(`${e}!! 정확한 식을 입력해주세요`);
             window.location.replace("/");
             return 0;
         }
@@ -204,34 +208,34 @@ const Calculator: React.FC = () => {
         <Wrap>
             <Input>{print}</Input>
             <Row>
-                <Button onClick={onClick}>(</Button>
-                <Button onClick={onClick}>)</Button>
-                <Button onClick={onClick}>/</Button>
-                <Button onClick={onResult}>=</Button>
+                <Button onClick={onClick} color={themeContext.colors.lightgreen}>(</Button>
+                <Button onClick={onClick} color={themeContext.colors.lightgreen}>)</Button>
+                <Button onClick={onClick} color={themeContext.colors.lightgreen}>/</Button>
+                <Button onClick={onResult} color={themeContext.colors.coral}>=</Button>
             </Row>
             <Row>
                 <Button onClick={onClick}>7</Button>
                 <Button onClick={onClick}>8</Button>
                 <Button onClick={onClick}>9</Button>
-                <Button onClick={onClick}>*</Button>
+                <Button onClick={onClick} color={themeContext.colors.lightgreen}>*</Button>
             </Row>
             <Row>
                 <Button onClick={onClick}>4</Button>
                 <Button onClick={onClick}>5</Button>
                 <Button onClick={onClick}>6</Button>
-                <Button onClick={onClick}>-</Button>
+                <Button onClick={onClick} color={themeContext.colors.lightgreen}>-</Button>
             </Row>
             <Row>
                 <Button onClick={onClick}>1</Button>
                 <Button onClick={onClick}>2</Button>
                 <Button onClick={onClick}>3</Button>
-                <Button onClick={onClick}>+</Button>
+                <Button onClick={onClick} color={themeContext.colors.lightgreen}>+</Button>
             </Row>
             <Row>
                 <Button onClick={onClick}>0</Button>
                 <Button onClick={onClick}>.</Button>
                 <Button onClick={onRemove}>Del</Button>
-                <Button onClick={()=>{setPrint('')}}>C</Button>
+                <Button onClick={()=>{setPrint('')}} color={themeContext.colors.yellow}>C</Button>
             </Row>
         </Wrap>
     );

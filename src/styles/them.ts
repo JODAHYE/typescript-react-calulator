@@ -1,11 +1,11 @@
 import { DefaultTheme } from 'styled-components';
 
 const theme: DefaultTheme = {
-  borderRadius: '50px',
 
   colors: {
-    main: 'cyan',
-    secondary: 'magenta',
+    lightgreen: '#69F67B',
+    yellow: '#F6EF69',
+    coral: '#F6697C',
   },
 };
 
