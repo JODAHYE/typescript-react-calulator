@@ -25,7 +25,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "tsc",
-    "publish": "npm run build && npm run publish",
+    "publish": "npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
