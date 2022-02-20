@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 const Wrap = styled.div`
     background: #6922DE;
@@ -102,7 +101,7 @@ const Calculator: React.FC = () => {
                     switch(infixArr[i]){
                         case '+': case '-': case '*': case '/':  
                             if(stack.length>0){
-                                while(stack[stack.length-1]!=null && priority(infixArr[i]) <= priority(stack[stack.length-1])){
+                                while(stack[stack.length-1]!==null && priority(infixArr[i]) <= priority(stack[stack.length-1])){
                                     result.push(stack.pop());
                                 }    
                                 if(priority(infixArr[i]) > priority(stack[stack.length-1])){
