@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 const Wrap = styled.div`
-    background: #6922DE;
+    background: #87AAD8;
     display: inline-block;
     margin: 0 auto;
     width: 500px;
     padding: 40px 20px;
     border-radius: 30px;
     box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.5);
+    @media (min-width: 320px) and (max-width: 480px) {
+        width: 95%;
+    }
 `;
 const Input = styled.p`
     margin: 0 auto;
+    min-height: 40px;
     width: 80%;
+    overflow-x: auto;
     font-size: 20px;
     padding: 10px;
     background: rgba(255, 255, 255, 0.4);
@@ -36,6 +41,9 @@ const Button = styled.button`
     background: #fff;
     &:active{
         box-shadow: none;
+    }
+    @media (min-width: 320px) and (max-width: 480px) {
+        height: 55px;
     }
 `;
 const Calculator: React.FC = () => {
@@ -210,6 +218,7 @@ const Calculator: React.FC = () => {
                 <Button onClick={onClick}>0</Button>
                 <Button onClick={onClick}>.</Button>
                 <Button onClick={onRemove}>Del</Button>
+                <Button onClick={()=>{setPrint('')}}>C</Button>
             </Row>
         </Wrap>
     );
