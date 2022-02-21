@@ -13,6 +13,7 @@ const Wrap = styled.div`
     box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.5);
     @media (min-width: 320px) and (max-width: 480px) {
         width: 95%;
+        padding: 30px 6px;
     }
 `;
 const Input = styled.p`
@@ -48,7 +49,7 @@ const Button = styled.button<backColor>`
         box-shadow: 0 0 3px 3px ${props=>props.color?props.color:'#fff'};
     }
     @media (min-width: 320px) and (max-width: 480px) {
-        height: 55px;
+        height: 60px;
     }
 `;
 const Calculator: React.FC = () => {
