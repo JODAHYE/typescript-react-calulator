@@ -8,6 +8,9 @@ const GlobalStyle = createGlobalStyle`
     font-size: 24px;
     font-family: 'Do Hyeon', sans-serif;
   }
+  button, html [type="button"] {
+    -webkit-appearance: none;   
+  }
   * {
     box-sizing: border-box;
   }
