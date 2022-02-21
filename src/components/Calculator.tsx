@@ -43,6 +43,7 @@ const Button = styled.button<backColor>`
     border-radius: 2px;
     background: ${props=>props.color?props.color:'#fff'};
     transition: .2s;
+    box-sizing: border-box;
     &:active, &:hover{
         box-shadow: 0 0 3px 3px ${props=>props.color?props.color:'#fff'};
     }
